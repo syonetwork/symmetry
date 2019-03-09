@@ -9,3 +9,5 @@ npm-debug.log.*
 thumbs.db
 !.gitkeep
 iohook-crash.log
+*.traineddata
+static/tesseract.min.js

@@ -31,6 +31,8 @@ npm install [or yarn]
 mkdir -p node_modules/iohook/builds/electron-v57-darwin-x64/build/Release
 cp iohook.node node_modules/iohook/builds/electron-v57-darwin-x64/build/Release/iohook.node
 
+cp node_modules/tesseract.js/dist/tesseract.min.js static/tesseract.min.js
+
 # serve with hot reload at localhost:9080
 npm run dev [or yarn dev]
 

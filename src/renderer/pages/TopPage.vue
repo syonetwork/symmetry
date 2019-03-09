@@ -1,21 +1,33 @@
 <template>
   <div id="wrapper">
+    <div>キャプチャ</div>
+    <div class="canvasArea">
+      <div><canvas id="leftCanvas" /></div>
+      <div><canvas id="rightCanvas" /></div>
+    </div>
     <div class="buttonArea">
       <button @click="onClickCapturer('left')">左キャプチャ</button>
-      <button @click="onClickAna('left')">左解析</button>
       <button @click="onClickCapturer('right')">右キャプチャ</button>
     </div>
-    <div class="canvasArea">
-      <canvas id="leftCanvas" />
-      <canvas id="rightCanvas" />
-    </div>
+    <div>日本語解析率</div>
     <div class="progressArea">
-      <div id="leftProgress" />
-      <div id="rightProgress" />
+      <div id="leftJpnProgress" />
+      <div id="rightJpnProgress" />
     </div>
+    <div>日本語解析結果出力</div>
     <div class="textArea">
-      <div id="leftText" />
-      <div id="rightText" />
+      <textarea id="leftJpnText" />
+      <textarea id="rightJpnText" />
+    </div>
+    <div>英語解析率</div>
+    <div class="progressArea">
+      <div id="leftEngProgress" />
+      <div id="rightEngProgress" />
+    </div>
+    <div>英語解析結果出力</div>
+    <div class="textArea">
+      <textarea id="leftEngText" />
+      <textarea id="rightEngText" />
     </div>
     <video />
   </div>
@@ -24,8 +36,6 @@
 <script>
   import ioHook from 'iohook'
   import { desktopCapturer, screen } from 'electron'
-  import path from 'path'
-  import Tesseract from 'tesseract.js'
 
   const screenSize = screen.getPrimaryDisplay().size
   let firstOnMouseEvent = null
@@ -71,23 +81,6 @@
             console.error(error)
           }
         })
-      },
-      onClickAna: (type) => {
-        const canvas = document.getElementById(`${type}Canvas`)
-        canvas.toBlob((blob) => {
-          let reader = new FileReader()
-          reader.readAsDataURL(blob)
-          reader.onload = () => {
-            path.resolve(reader.result)
-            Tesseract.recognize(reader.result).progress((p) => {
-              console.log(p)
-              document.getElementById(`${type}Progress`).innerHTML = p.progress
-            }).then((r) => {
-              console.log(r)
-              document.getElementById(`${type}Text`).innerHTML = r.text
-            })
-          }
-        })
       }
     }
   }
@@ -114,13 +107,16 @@
       firstOnMouseEvent = null
       secondOnMouseEvent = null
       ioHook.stop()
-      // Tesseract.recognize(src).progress((p) => {
-      //   console.log(p)
-      //   // document.getElementById(`${type}Progress`).innerHTML = p.progress
-      // }).then((r) => {
-      //   console.log(r)
-      //   // document.getElementById(`${type}Text`).innerHTML = r.text
-      // })
+      window.Tesseract.recognize(canvas, {lang: 'jpn'}).progress((p) => {
+        document.getElementById(`${type}JpnProgress`).innerHTML = `${p.progress * 100}%`
+      }).then((r) => {
+        document.getElementById(`${type}JpnText`).innerHTML = r.text
+      })
+      window.Tesseract.recognize(canvas).progress((p) => {
+        document.getElementById(`${type}EngProgress`).innerHTML = `${p.progress * 100}%`
+      }).then((r) => {
+        document.getElementById(`${type}EngText`).innerHTML = r.text
+      })
     }
   }
 
@@ -156,13 +152,29 @@
     background-color: white;
   }
 
-  .buttonArea, .progressArea {
+  .buttonArea,
+  .canvasArea,
+  .progressArea,
+  .textArea {
     display: flex;
     justify-content: center;
     justify-items: center;
   }
 
-  .canvasArea > canvas {
+  .buttonArea > button,
+  .canvasArea > div,
+  .progressArea > div {
+    width: 50%;
+  }
+
+  .textArea > textarea {
+    resize: vertical;
+    width: 50%;
+    height: 30%;
+    height: 200px;
+  }
+
+  .canvasArea > div > canvas {
     outline: black 3px solid;
   }
 
