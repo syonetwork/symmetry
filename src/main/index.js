@@ -22,18 +22,18 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    left: 0,
-    top: 0,
-    width: size.width,
-    height: size.height,
-    frame: false,
+    center: true,
+    focusable: true,
+    width: size.width / 2,
+    height: size.height / 2,
+    frame: true,
     show: true,
-    transparent: true,
-    resizable: false
+    transparent: false,
+    resizable: true,
     // アプリケーション起動した時に先頭に表示する
-    // 'always-on-top': true
+    'always-on-top': true
   })
-  mainWindow.setIgnoreMouseEvents(true)
+  // mainWindow.setIgnoreMouseEvents(true)
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
@@ -42,7 +42,7 @@ function createWindow () {
 
   menu = Menu.buildFromTemplate([
     {
-      label: 'autron',
+      label: 'symmetry',
       submenu: [
         {label: 'Exit', click: onExit}
       ]

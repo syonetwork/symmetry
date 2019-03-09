@@ -1,4 +1,4 @@
-# autron
+# symmetry
 
 > An electron-vue project
 
@@ -25,6 +25,7 @@ npm install [or yarn]
 
 # re-build OS Modules
 # もしかするとOSごとにビルドし直す必要がありそう?
+# Python2.X系でビルドする必要がある
 ./node_modules/.bin/electron-rebuild -f iohook
 
 mkdir -p node_modules/iohook/builds/electron-v57-darwin-x64/build/Release

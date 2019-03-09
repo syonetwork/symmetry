@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'autron'
+    name: 'symmentry'
   }
 </script>
 
