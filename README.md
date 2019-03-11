@@ -28,9 +28,16 @@ npm install [or yarn]
 # Python2.X系でビルドする必要がある
 ./node_modules/.bin/electron-rebuild -f iohook
 
+# もしくはビルドが大変そうなら
 mkdir -p node_modules/iohook/builds/electron-v57-darwin-x64/build/Release
 cp iohook.node node_modules/iohook/builds/electron-v57-darwin-x64/build/Release/iohook.node
 
+# environment variable
+cp .env.sample .env
+# set google api key and secret
+vi .env
+
+# static file copy
 cp node_modules/tesseract.js/dist/tesseract.min.js static/tesseract.min.js
 
 # serve with hot reload at localhost:9080

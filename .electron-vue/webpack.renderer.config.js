@@ -11,6 +11,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const dotenv = require('dotenv').config({ path: `${__dirname}/../.env` }).parsed
+const env = Object.keys(dotenv).reduce((accumulator, key) => {
+  accumulator[`process.env.${key}`] = `"${dotenv[key]}"`
+  return accumulator
+}, {})
+
 /**
  * List of node_modules to include in webpack bundle
  *
@@ -146,7 +152,8 @@ let rendererConfig = {
 if (process.env.NODE_ENV !== 'production') {
   rendererConfig.plugins.push(
     new webpack.DefinePlugin({
-      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`
+      '__static': `"${path.join(__dirname, '../static').replace(/\\/g, '\\\\')}"`,
+      ...env
     })
   )
 }
@@ -167,7 +174,8 @@ if (process.env.NODE_ENV === 'production') {
       }
     ]),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      'process.env.NODE_ENV': '"production"',
+      ...env
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true

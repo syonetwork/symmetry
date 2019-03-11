@@ -11,3 +11,6 @@ thumbs.db
 iohook-crash.log
 *.traineddata
 static/tesseract.min.js
+.env
+left.png
+right.png

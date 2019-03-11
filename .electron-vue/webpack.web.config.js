@@ -10,6 +10,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const dotenv = require('dotenv').config({ path: `${__dirname}/../.env` }).parsed
+const env = Object.keys(dotenv).reduce((accumulator, key) => {
+  accumulator[`process.env.${key}`] = `"${dotenv[key]}"`
+  return accumulator
+}, {})
+
 let webConfig = {
   devtool: '#cheap-module-eval-source-map',
   entry: {
@@ -93,7 +99,8 @@ let webConfig = {
       nodeModules: false
     }),
     new webpack.DefinePlugin({
-      'process.env.IS_WEB': 'true'
+      'process.env.IS_WEB': 'true',
+      ...env
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin()
@@ -128,7 +135,8 @@ if (process.env.NODE_ENV === 'production') {
       }
     ]),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
+      'process.env.NODE_ENV': '"production"',
+      ...env
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
